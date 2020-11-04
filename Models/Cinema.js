@@ -14,7 +14,7 @@ const cinemaSchema = new Schema({
     type: {
         type: String
     }
-});
+}, { timestamps: true });
 
 
 cinemaSchema.statics.getNext = async function(id) {

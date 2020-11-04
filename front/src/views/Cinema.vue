@@ -1,12 +1,12 @@
 <template>
   <div :style="style"
+       :class="classes"
        class="cinema">
     <img :src="frame">
     <div>
-
         <label
           class="answer__item"
-          v-for="(item, index) of answers"
+          v-for="(item, index) of currentCinema.title"
           :key="index">
           <input
               type="radio"
@@ -16,11 +16,7 @@
               v-model="title">
           {{item}}
         </label>
-
-      <button @click="check">Check</button>
     </div>
-
-    <button @click="random">Next</button>
   </div>
 </template>
 
@@ -33,11 +29,12 @@ export default {
   name: "Cinema",
   data() {
     return {
+      classes: [],
       currentCinema: {
-        title: '',
-        randomTitles: [],
+        title: [],
       },
       title: '',
+      loading: false,
       color: {
         r: 0,
         g: 0,
@@ -47,23 +44,12 @@ export default {
     }
   },
   computed: {
-    answers() {
-      const answers = [].concat(this.getRandomTitle, this.currentCinema.randomTitles);
-      return answers.sort(() => {
-        return Math.random() - 0.5;
-      })
-    },
     style() {
       const gr = `linear-gradient(0deg, rgba(${this.color.r},${this.color.g},${this.color.b}, 0.9),
                   rgba(${this.color.r},${this.color.g},${this.color.b}, 1) 80%)`;
       return {
         background: gr
       }
-    },
-    getRandomTitle() {
-      const amount = this.currentCinema.title.length;
-      const rand = Math.floor(Math.random() * amount);
-      return this.currentCinema.title[rand];
     },
     frame() {
       return 'http://localhost:3000/' + this.currentCinema.frame
@@ -79,15 +65,30 @@ export default {
         this.color.b = color.b
       }
     },
+    delay(ms = 2500) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    },
     clear() {
       this.title = '';
+      this.classes = [];
     },
     async check() {
-      const status = this.currentCinema.title.some(item => item.toLowerCase() === this.title.toLowerCase());
+      if (!this.title || this.loading) return;
+      this.loading = true;
+      const {data} = await CinemaRepository.answer({
+        id: this.currentCinema._id,
+        answer: this.title
+      });
 
-      await CinemaRepository.answer(this.currentCinema)
+      const answerClass = data.answer ? 'correct' : 'wrong';
+      this.classes.push(answerClass);
+
+      await this.delay();
       await this.random();
       this.clear()
+      this.loading = false;
     },
     async random() {
       this.clear();
@@ -115,6 +116,12 @@ export default {
 
 <style lang="scss">
   .cinema {
+    &.correct img {
+      border: 2px solid green;
+    }
+    &.wrong img {
+      border: 2px solid red;
+    }
     .answer__item {
       background-color: white;
       padding: 5px 10px;
@@ -126,6 +133,7 @@ export default {
     width: 100%;
     //min-height: 700px;
     img {
+      padding: 20px;
       width: 600px;
       max-width: 80%;
     }

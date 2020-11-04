@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Cinema = require('../Models/Cinema');
+const UserStat = require('../Models/UserStat')
 const multer = require('multer');
 const uniqueFilename = require('unique-filename');
 const storage = multer.memoryStorage()
@@ -10,7 +11,7 @@ const dirName = 'assets/images/'
 const {isValidId} = require('../Middleware/isValidId')
 
 
-router.post('/create', upload.single('frame', 12), async (req, res) => {
+router.post('/create', upload.single('frame', 1), async (req, res) => {
     try {
         const ext =  req.file.mimetype.replace('image/', '');
         const filePath = `${uniqueFilename(dirName) + '.' + ext}`
@@ -32,7 +33,6 @@ router.post('/create', upload.single('frame', 12), async (req, res) => {
 router.get('/get_last_remember',  async (req, res) => {
     try {
         const id = req.session.correctAnswer;
-        console.log({id})
         let cinema;
         if (id && isValidId(id)) {
             cinema = await Cinema.getNext(id)
@@ -42,10 +42,11 @@ router.get('/get_last_remember',  async (req, res) => {
         let randomTitles = await Cinema.randomTitle();
         randomTitles = randomTitles.filter(item => item !== cinema.title[0]);
         randomTitles = randomTitles.slice(0, 3);
+        const title = [].concat(randomTitles, cinema._doc.title).sort(() => Math.random() - 0.5)
 
         res.json({
-            randomTitles,
-            ...cinema._doc
+            ...cinema._doc,
+            title
         });
     }
     catch (e) {
@@ -77,10 +78,19 @@ router.get('/:id',  async (req, res) => {
 
 router.post('/answer',  async (req, res) => {
     try {
-        const id = req.body._id;
+        const {id, answer} = req.body;
         req.session.correctAnswer = id;
-        res.send('')
-        console.log(req.session.correctAnswer)
+        const cinema = await Cinema.findById(id);
+        const status = cinema.title.some(item => item.toLowerCase() === answer.toLowerCase());
+        const sessionID = req.session.id;
+
+        await UserStat.create({
+            sessionID,
+            cinema: cinema._id,
+            answer: status
+        });
+
+        res.json({answer: status})
     }
     catch (e) {
         res.status(500).send('Something was wrong')
