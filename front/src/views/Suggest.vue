@@ -1,6 +1,6 @@
 <template>
   <div class="form__suggest">
-    <img :src="src" alt="">
+    <img v-show="src" :src="src" alt="">
     <div>
       <label>
         Name of cinema
@@ -56,6 +56,7 @@ export default {
       } finally {
         this.file = '';
         this.name = '';
+        this.src = '';
       }
     }
   }

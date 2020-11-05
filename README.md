@@ -1,4 +1,6 @@
-# card
+# Frame
+
+Guess cinema by frame
 
 ## Project setup
 ```

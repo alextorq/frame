@@ -2,7 +2,9 @@
   <div :style="style"
        :class="classes"
        class="cinema">
-    <img :src="frame">
+    <img
+        v-if="frame"
+        :src="frame">
     <div>
         <label
           class="answer__item"
@@ -74,27 +76,38 @@ export default {
       this.title = '';
       this.classes = [];
     },
-    async check() {
-      if (!this.title || this.loading) return;
-      this.loading = true;
-      const {data} = await CinemaRepository.answer({
-        id: this.currentCinema._id,
-        answer: this.title
-      });
-
-      const answerClass = data.answer ? 'correct' : 'wrong';
-      this.classes.push(answerClass);
-
-      await this.delay();
-      await this.random();
-      this.clear()
-      this.loading = false;
-    },
-    async random() {
-      this.clear();
-      const res = await CinemaRepository.getFirstOrLastMemory();
+    setCinema(res) {
       this.currentCinema = res.data;
       this.getColor();
+    },
+    errorHandler(err) {
+      this.$router.push({name: 'Finish'})
+      console.error(err);
+    },
+    async check() {
+      try {
+        if (!this.title || this.loading) return;
+        this.loading = true;
+
+        const {data} = await CinemaRepository.answer({
+          id: this.currentCinema._id,
+          answer: this.title
+        });
+
+        const answerClass = data.answer ? 'correct' : 'wrong';
+        this.classes.push(answerClass);
+
+        const [, res] = await Promise.all([this.delay(), this.random()])
+
+        this.clear()
+        this.setCinema(res);
+        this.loading = false;
+      }catch (e) {
+        this.errorHandler(e)
+      }
+    },
+    async random() {
+      return await CinemaRepository.getFirstOrLastMemory();
     }
   },
   props: {
@@ -108,8 +121,14 @@ export default {
       }
     }
   },
-  mounted() {
-    this.random();
+  async mounted() {
+    try {
+      this.clear();
+      const res = await this.random();
+      this.setCinema(res);
+    }catch (e) {
+      this.errorHandler(e)
+    }
   }
 }
 </script>
@@ -134,8 +153,11 @@ export default {
     //min-height: 700px;
     img {
       padding: 20px;
+      border: 2px solid transparent;
       width: 600px;
       max-width: 80%;
+      user-select: none;
+      -webkit-user-drag: none;
     }
   }
 </style>

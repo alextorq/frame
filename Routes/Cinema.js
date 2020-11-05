@@ -12,6 +12,7 @@ const {isValidId} = require('../Middleware/isValidId')
 
 
 router.post('/create', upload.single('frame', 1), async (req, res) => {
+    //TODO Валидация файла
     try {
         const ext =  req.file.mimetype.replace('image/', '');
         const filePath = `${uniqueFilename(dirName) + '.' + ext}`
@@ -31,6 +32,7 @@ router.post('/create', upload.single('frame', 1), async (req, res) => {
 
 
 router.get('/get_last_remember',  async (req, res) => {
+    // TODO обработка последего кадра
     try {
         const id = req.session.correctAnswer;
         let cinema;
@@ -39,6 +41,11 @@ router.get('/get_last_remember',  async (req, res) => {
         }else {
             cinema = await Cinema.findOne({})
         }
+
+       if (cinema === null) {
+           return res.status(404).send();
+       }
+
         let randomTitles = await Cinema.randomTitle();
         randomTitles = randomTitles.filter(item => item !== cinema.title[0]);
         randomTitles = randomTitles.slice(0, 3);
@@ -56,28 +63,28 @@ router.get('/get_last_remember',  async (req, res) => {
 });
 
 
-router.get('/:id',  async (req, res) => {
-    try {
-        const id = req.params.id;
-        const cinema = await Cinema.findById(id)
-        let randomTitles = await Cinema.randomTitle();
-        randomTitles = randomTitles.filter(item => item !== cinema.title[0]);
-        randomTitles = randomTitles.slice(0, 3);
-
-        res.json({
-            randomTitles,
-            ...cinema._doc
-        });
-    }
-    catch (e) {
-        res.status(500).send('Something was wrong')
-        console.error(e)
-    }
-});
-
+// router.get('/:id',  async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         const cinema = await Cinema.findById(id)
+//         let randomTitles = await Cinema.randomTitle();
+//         randomTitles = randomTitles.filter(item => item !== cinema.title[0]);
+//         randomTitles = randomTitles.slice(0, 3);
+//
+//         res.json({
+//             randomTitles,
+//             ...cinema._doc
+//         });
+//     }
+//     catch (e) {
+//         res.status(500).send('Something was wrong')
+//         console.error(e)
+//     }
+// });
 
 router.post('/answer',  async (req, res) => {
     try {
+        // TODO перенос статистики при регистрации
         const {id, answer} = req.body;
         req.session.correctAnswer = id;
         const cinema = await Cinema.findById(id);
@@ -97,7 +104,6 @@ router.post('/answer',  async (req, res) => {
         console.error(e)
     }
 });
-
 
 
 

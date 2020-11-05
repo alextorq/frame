@@ -1,22 +1,23 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "../views/Cinema.vue";
 import Suggest from "../views/Suggest";
+import Finish from "../views/Finish";
 
 const routes = [
     {
         path: "/",
         name: "Home",
-        redirect: { name: 'Cinema', params: {id: ' '} }
-    },
-    {
-        path: "/cinema/:id",
-        name: "Cinema",
-        component: Home,
+        component: Home
     },
     {
         path: "/suggest",
         name: "Suggest",
         component: Suggest,
+    },
+    {
+        path: "/finish",
+        name: "Finish",
+        component: Finish,
     },
 ];
 
