@@ -6,8 +6,6 @@ name: Node.js CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
@@ -25,4 +23,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: cd front && npm i
+    - run: cd ./front && npm ci
+    - run: npm run build
+    - run: mkdir -p ../public
+    - run: cp -R ./dist/* ../public
+    - run: rm -rf ./front
+    - run: cd ../
+    - run:
