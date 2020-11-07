@@ -29,3 +29,4 @@ jobs:
     - run: cd ./front && cp -R ./dist/* ../public
     - run: rm -rf ./front
     - run: rsync -a "$PWD" ~/projects/
+    - run: pm2 restart all
