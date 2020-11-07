@@ -24,6 +24,8 @@
 
 <script>
 
+const PREFIX = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : '';
+
 import CinemaRepository from '../Repository/Cinema'
 import middleColor from "../utils/middleColor";
 
@@ -54,7 +56,7 @@ export default {
       }
     },
     frame() {
-      return 'http://localhost:3000/' + this.currentCinema.frame
+      return PREFIX + this.currentCinema.frame
     },
 
   },
