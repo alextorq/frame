@@ -56,7 +56,7 @@ export default {
       }
     },
     frame() {
-      return PREFIX + this.currentCinema.frame[0]
+      return PREFIX + this.currentCinema?.frame?.[0]
     },
 
   },
