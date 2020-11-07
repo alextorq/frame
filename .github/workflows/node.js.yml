@@ -29,4 +29,3 @@ jobs:
     - run: cp -R ./dist/* ../public
     - run: rm -rf ./front
     - run: cd ../
-    - run:
