@@ -4,7 +4,7 @@ const connection = require('./Utils/Connection');
 const Cinema = require('./Routes/Cinema');
 const cors = require('cors')
 const session = require('express-session')
-const env = require('./Utils/ENV')
+const env = require('dotenv').config();
 
 
 const envParse = env.parsed

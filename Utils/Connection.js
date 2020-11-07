@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('./ENV')
+require('dotenv').config();
 
 mongoose.set('debug', true);
 
