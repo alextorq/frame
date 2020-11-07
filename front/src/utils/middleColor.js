@@ -29,7 +29,7 @@ export default function (imagePath) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const image = new Image();
-        image.src = 'http://localhost:3000/' + imagePath;
+        image.src = imagePath;
         image.crossOrigin = "Anonymous";
         image.addEventListener('load', () => {
             const { naturalWidth, naturalHeight } = image;

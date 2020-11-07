@@ -56,13 +56,13 @@ export default {
       }
     },
     frame() {
-      return PREFIX + this.currentCinema.frame
+      return PREFIX + this.currentCinema.frame[0]
     },
 
   },
   methods: {
     async getColor() {
-      const color = await middleColor(this.currentCinema.frame[0]);
+      const color = await middleColor(this.frame);
       if (color) {
         this.color.r = color.r
         this.color.g= color.g
