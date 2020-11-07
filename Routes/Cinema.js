@@ -107,4 +107,25 @@ router.post('/answer',  async (req, res) => {
 
 
 
+
+router.post('/weekly', upload.single('frame', 1), async (req, res) => {
+    //TODO Валидация файла
+    try {
+        const ext =  req.file.mimetype.replace('image/', '');
+        const filePath = `${uniqueFilename(dirName) + '.' + ext}`
+
+        await fs.writeFile('public/' + filePath, req.file.buffer);
+        const cinemaModel = await Cinema.create({
+            frame: [filePath],
+            title: [req.body.name]
+        })
+        res.json(cinemaModel);
+    }
+    catch (e) {
+        res.status(500).send('Something was wrong')
+        console.error(e)
+    }
+});
+
+
 module.exports = router;

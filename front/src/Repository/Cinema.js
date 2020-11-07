@@ -30,6 +30,9 @@ class CinemaRepository {
         return this.transport.get(`${PREFIX + 'cinema/get_next/' + id}`, {withCredentials: true});
     }
 
+    weekly() {
+        return this.transport.get(`${PREFIX}'cinema/weekly/`)
+    }
 
     answer(cinema) {
         return this.transport.post(`${PREFIX + 'cinema/answer'}`, cinema, {withCredentials: true});
