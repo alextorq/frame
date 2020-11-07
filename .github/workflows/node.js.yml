@@ -28,4 +28,4 @@ jobs:
     - run: mkdir -p ./public
     - run: cd ./front && cp -R ./dist/* ../public
     - run: rm -rf ./front
-    - run: cd ../
+    - run: rsync -a "$PWD" ~/projects/
