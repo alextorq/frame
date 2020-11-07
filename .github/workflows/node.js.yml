@@ -24,8 +24,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: cd ./front && npm ci
-    - run: npm run build
-    - run: mkdir -p ../public
-    - run: cp -R ./dist/* ../public
+    - run: cd ./front && npm run build
+    - run: mkdir -p ./public
+    - run: cd ./front && cp -R ./dist/* ../public
     - run: rm -rf ./front
     - run: cd ../
