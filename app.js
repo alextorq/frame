@@ -25,7 +25,7 @@ app.use(session({
     saveUninitialized: true
 }))
 
-app.use(express.static('public'))
+// app.use(express.static('public'))
 
 app.use(function (err, req, res, next) {
     console.error(err.stack)
@@ -43,4 +43,4 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
 
-app.use('/cinema', Cinema)
+app.use('/api/cinema', Cinema)
