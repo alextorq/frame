@@ -1,16 +1,11 @@
 <template>
-  <div class="menu">
-    <router-link :to="{name: 'Suggest'}">Suggest</router-link>
-    <router-link :to="{name: 'Home'}">Cinema</router-link>
-    <router-link :to="{name: 'Weekly'}">Weekly</router-link>
-  </div>
-
+  <Menu/>
   <router-view></router-view>
 </template>
 
 <script>
 
-
+import Menu from "./components/Menu";
 
 
 export default {
@@ -20,6 +15,7 @@ export default {
     }
   },
   components: {
+    Menu,
   },
   computed: {
 
