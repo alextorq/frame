@@ -13,6 +13,7 @@
       <input
         type="file"
         ref="file"
+        size="5000000"
         accept="image/jpeg,image/png"
         @change="saveFile">
     </div>
@@ -25,6 +26,7 @@
 <script>
 import Cinema from "../Repository/Cinema";
 import Notification from "../utils/Notification";
+import sizeValidate from '../utils/sizeValidate'
 
 export default {
   name: "Suggest",
@@ -42,6 +44,7 @@ export default {
   },
   methods: {
     saveFile(e) {
+      this.src = '';
       this.file = e.target.files[0]
       if (this.file) {
         const fr = new FileReader();
@@ -51,7 +54,27 @@ export default {
         fr.readAsDataURL(this.file);
       }
     },
+    validate() {
+      let status = true;
+      const size = sizeValidate(this.file);
+      if (!size) {
+        status = false;
+        Notification.sendErrorNotification('Файл слишком большой')
+      }
+      if (!this.name || !this.file) {
+        status = false;
+        Notification.sendErrorNotification('Заполните все поля')
+      }
+      return status;
+    },
+    resetFile() {
+      this.$refs.file.value = ''
+      this.file = '';
+    },
     async suggest() {
+      if (!this.validate()) {
+        return
+      }
       try {
         const formData = Cinema.convertToFormData({
           name: this.name,
@@ -64,8 +87,7 @@ export default {
         Notification.sendErrorNotification(error.response?.data?.message ?? 'Что то пошло не так')
         // const
       } finally {
-        this.$refs.file.value = ''
-        this.file = '';
+        this.resetFile();
         this.name = '';
         this.src = '';
       }

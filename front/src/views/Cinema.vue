@@ -3,7 +3,7 @@
        :class="classes"
        class="cinema">
     <img
-        v-if="frame"
+        v-if="isImage"
         :src="frame">
     <div>
         <label
@@ -58,15 +58,15 @@ export default {
     frame() {
       return PREFIX + this.currentCinema?.frame?.[0]
     },
-
+    isImage() {
+      return this.currentCinema?.frame?.[0] ?? null;
+    }
   },
   methods: {
     async getColor() {
       const color = await middleColor(this.frame);
       if (color) {
-        this.color.r = color.r
-        this.color.g= color.g
-        this.color.b = color.b
+        this.color = {...color}
       }
     },
     delay(ms = 2500) {
@@ -150,6 +150,9 @@ export default {
       margin-top: 20px;
       margin-bottom: 10px;
       display: inline-flex;
+      &:last-child {
+        margin-right: 0;
+      }
     }
     width: 100%;
     //min-height: 700px;

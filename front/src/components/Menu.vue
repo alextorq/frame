@@ -12,6 +12,14 @@ name: "Menu"
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .menu {
+    margin-top: 10px;
+    a {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
 </style>
