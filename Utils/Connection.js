@@ -8,7 +8,7 @@ let connectionString = `${process.env.MONGO_URL + process.env.MONGO_DB}`;
 if (envParse.MODE === 'develop') {
     mongoose.set('debug', true);
 } else {
-    connectionString = `${process.env.MONGO_USER}:${process.env.MONGO_PASS}@` + connectionString
+    // connectionString = `${process.env.MONGO_USER}:${process.env.MONGO_PASS}@` + connectionString
 }
 
 mongoose.connect('mongodb://' + connectionString,
