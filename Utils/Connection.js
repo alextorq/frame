@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+const env = require('dotenv').config();
 
-mongoose.set('debug', true);
+const envParse = env.parsed
 
-mongoose.connect(`${process.env.MONGO_URL + process.env.MONGO_DB}`,
+let connectionString = `${process.env.MONGO_URL + process.env.MONGO_DB}`;
+
+if (envParse.MODE === 'develop') {
+    mongoose.set('debug', true);
+} else {
+    connectionString = `${process.env.MONGO_USER}:${process.env.MONGO_PASS}@` + connectionString
+}
+
+mongoose.connect('mongodb://' + connectionString,
     { useNewUrlParser: true, autoIndex: false },
     function(err){
         if(err) return console.log(err);

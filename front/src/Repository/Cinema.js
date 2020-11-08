@@ -1,5 +1,7 @@
 import axios from 'axios'
-const PREFIX = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : '/api/';
+const PREFIX = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/' : '/api/';
+
+console.log(PREFIX)
 
 class CinemaRepository {
     constructor(transport) {

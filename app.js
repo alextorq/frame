@@ -15,8 +15,12 @@ if (envParse.MODE === 'develop') {
     app.use(cors({
         credentials: true,
         origin: "http://localhost:8080"
-    }))
+    }));
+
+    app.use(express.static('public'));
 }
+
+
 app.disable('x-powered-by');
 
 app.use(session({
@@ -25,22 +29,22 @@ app.use(session({
     saveUninitialized: true
 }))
 
-// app.use(express.static('public'))
+
 
 app.use(function (err, req, res, next) {
     console.error(err.stack)
-    res.status(500).send('Something broke!')
+    res.status(500).send('Something broke!');
 })
 
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Example app listening at http://localhost:${port}`);
 })
 
 app.use('/api/cinema', Cinema)
