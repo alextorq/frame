@@ -1,23 +1,30 @@
 <template>
   <div class="form__suggest">
-    <img v-show="src" :src="src" alt="">
+    <img
+      v-show="src"
+      :src="src">
     <div>
-      <label>
-        Name of cinema
-        <input type="text" v-model="name">
-      </label>
+        <input
+          type="text"
+          v-model="name"
+          placeholder="Введите название фильма">
     </div>
     <div>
-      <input type="file" accept="image/jpeg,image/png" @change="saveFile">
+      <input
+        type="file"
+        ref="file"
+        accept="image/jpeg,image/png"
+        @change="saveFile">
     </div>
 
-    <button @click="suggest">Suggest</button>
+    <button @click="suggest">Предложить</button>
 
   </div>
 </template>
 
 <script>
 import Cinema from "../Repository/Cinema";
+import Notification from "../utils/Notification";
 
 export default {
   name: "Suggest",
@@ -51,9 +58,13 @@ export default {
           frame: this.file
         });
         await Cinema.suggestCinema(formData);
-      } catch (e) {
-        console.error(e)
+        Notification.sendDefaultNotification('Спасибо за предложение')
+      } catch (error) {
+        console.error(error)
+        Notification.sendErrorNotification(error.response?.data?.message ?? 'Что то пошло не так')
+        // const
       } finally {
+        this.$refs.file.value = ''
         this.file = '';
         this.name = '';
         this.src = '';

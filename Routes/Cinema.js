@@ -8,7 +8,7 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage });
 const fs = require('fs').promises;
 const dirName = 'assets/images/'
-const {isValidId} = require('../Middleware/isValidId')
+const {isValidId } = require('../Middleware/isValidId')
 
 
 router.post('/create', upload.single('frame', 1), async (req, res) => {
@@ -17,10 +17,29 @@ router.post('/create', upload.single('frame', 1), async (req, res) => {
         const ext =  req.file.mimetype.replace('image/', '');
         const filePath = `${uniqueFilename(dirName) + '.' + ext}`
 
-        await fs.writeFile('public/' + filePath, req.file.buffer);
+        const { name } = req.body;
+        const file = req.file.buffer;
+
+        if (!name || !file) {
+            return res.status(400).json({
+                message: 'Необходимо заполнить все поля'
+            })
+        }
+
+        const alreadyExistCinema = await Cinema.find({
+            title: [name],
+        });
+
+        if (alreadyExistCinema) {
+            return res.status(409).json({
+                message: 'Фильм уже существует'
+            })
+        }
+
+        await fs.writeFile('public/' + filePath, file);
         const cinemaModel = await Cinema.create({
             frame: [filePath],
-            title: [req.body.name]
+            title: [name]
         })
         res.json(cinemaModel);
     }
