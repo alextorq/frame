@@ -1,4 +1,4 @@
-function getColor(arr) {
+function getColor(arr: Uint8ClampedArray) {
     const count = arr.length / 4;
 
     const colors = {
@@ -24,7 +24,7 @@ function getColor(arr) {
     return colors
 }
 
-export default function (imagePath) {
+export default function (imagePath: string) {
     return new Promise((resolve) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -35,6 +35,7 @@ export default function (imagePath) {
             const { naturalWidth, naturalHeight } = image;
             canvas.width = naturalWidth;
             canvas.height = naturalHeight;
+            if (!ctx) return
             ctx.drawImage(image, 0, 0, naturalWidth, naturalHeight);
             const imageData = ctx.getImageData(0, 0, naturalWidth, naturalHeight);
             resolve(getColor(imageData.data));

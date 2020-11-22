@@ -1,30 +1,15 @@
 <template>
-  <Menu/>
   <router-view></router-view>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-import Menu from "./components/Menu";
-
-
-export default {
+export default defineComponent({
   name: 'App',
-  data() {
-    return {
-    }
-  },
   components: {
-    Menu,
-  },
-  computed: {
-
-  },
-  methods: {
-
-  },
-
-}
+  }
+});
 </script>
 
 <style lang="scss">

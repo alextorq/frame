@@ -27,7 +27,7 @@
 const PREFIX = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : '';
 
 import CinemaRepository from '../Repository/Cinema'
-import middleColor from "../utils/middleColor";
+import middleColor from "../utils/middleColor.ts";
 
 export default {
   name: "Cinema",

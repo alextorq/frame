@@ -28,6 +28,7 @@ import Cinema from "../Repository/Cinema";
 import Notification from "../utils/Notification";
 import sizeValidate from '../utils/sizeValidate'
 
+
 export default {
   name: "Suggest",
   data() {
@@ -45,7 +46,8 @@ export default {
   methods: {
     saveFile(e) {
       this.src = '';
-      this.file = e.target.files[0]
+      const file = e.target.files[0]
+      this.file = file;
       if (this.file) {
         const fr = new FileReader();
         fr.onload =  () => {

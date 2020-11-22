@@ -16,7 +16,7 @@ name: "Menu"
   .menu {
     margin-top: 10px;
     a {
-      margin-right: 10px;
+      margin-right: 10px;K
       &:last-child {
         margin-right: 0;
       }
